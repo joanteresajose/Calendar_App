@@ -1,9 +1,14 @@
 from typing import Dict, Any
-from llm_utils import extract_intent_entities
-from calendar_utils import check_availability, create_event
+from backend.llm_utils import extract_intent_entities
+from backend.calendar_utils import check_availability, create_event
 import datetime
 
 # Session state can be extended as needed
+
+def extract_value(val):
+    if isinstance(val, dict) and "value" in val:
+        return val["value"]
+    return val
 
 def agent_respond(user_message: str, session_state: Dict[str, Any] = None) -> Dict[str, Any]:
     if session_state is None:
@@ -13,16 +18,19 @@ def agent_respond(user_message: str, session_state: Dict[str, Any] = None) -> Di
     llm_result = extract_intent_entities(user_message)
     intent = llm_result.get('intent', 'unknown')
     entities = llm_result.get('entities', {})
+    print("Entities received from LLM:", entities)  # Debug print
     response = ""
 
     # Step 2: Handle intents
     if intent == 'book_appointment':
         # Extract required entities
-        date = entities.get('date')
-        time = entities.get('time')
+        date = extract_value(entities.get('date'))
+        time = extract_value(entities.get('time'))
         summary = entities.get('summary', 'Appointment')
         participants = entities.get('participants', [])
         description = entities.get('description', '')
+        if date: date = str(date).strip()
+        if time: time = str(time).strip()
         if not date or not time:
             response = "Could you please specify the date and time for the appointment?"
         else:
@@ -37,10 +45,13 @@ def agent_respond(user_message: str, session_state: Dict[str, Any] = None) -> Di
                 else:
                     response = f"Sorry, that time is not available. Would you like to try a different time?"
             except Exception as e:
+                print("Date/time parsing error:", e)
                 response = f"I couldn't understand the date or time. Please provide them in YYYY-MM-DD and HH:MM format."
     elif intent == 'check_availability':
-        date = entities.get('date')
-        time = entities.get('time')
+        date = extract_value(entities.get('date'))
+        time = extract_value(entities.get('time'))
+        if date: date = str(date).strip()
+        if time: time = str(time).strip()
         if not date or not time:
             response = "Please specify the date and time you'd like to check."
         else:
@@ -53,6 +64,7 @@ def agent_respond(user_message: str, session_state: Dict[str, Any] = None) -> Di
                 else:
                     response = f"That slot is not available. Would you like to check another time?"
             except Exception as e:
+                print("Date/time parsing error:", e)
                 response = f"I couldn't understand the date or time. Please provide them in YYYY-MM-DD and HH:MM format."
     else:
         response = "I'm here to help you book or check appointments. How can I assist you today?"
