@@ -1,6 +1,6 @@
 from typing import Dict, Any
-from backend.llm_utils import extract_intent_entities
-from backend.calendar_utils import check_availability, create_event
+from llm_utils import extract_intent_entities
+from calendar_utils import check_availability, create_event
 import datetime
 
 # Session state can be extended as needed
