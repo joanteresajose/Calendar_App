@@ -4,7 +4,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 # Path to your service account key file
-SERVICE_ACCOUNT_FILE = 'backend/service_account.json'
+SERVICE_ACCOUNT_FILE = 'service_account.json'
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 # Set your calendar ID (can be found in Google Calendar settings)
