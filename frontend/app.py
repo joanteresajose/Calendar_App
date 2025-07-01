@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "http://localhost:8000/chat"  # Change if backend is hosted elsewhere
+API_URL = "https://calendar-backend-zz1v.onrender.com/chat"  # Change if backend is hosted elsewhere
 
 st.set_page_config(page_title="Calendar Booking Assistant", page_icon="📅")
 st.title("📅 Calendar Booking Assistant")
