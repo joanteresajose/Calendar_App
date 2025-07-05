@@ -36,12 +36,11 @@ async def chat_endpoint(chat_request: ChatRequest):
     user_message = chat_request.message
     session_state = chat_request.session_state or {}
     agent_result = agent_respond(user_message, session_state)
-    return ChatResponse(
-        response=agent_result["response"],
-        session_id=chat_request.session_id,
-        session_state=agent_result.get("session_state", {})
-    )
+    return {
+        "response": agent_result["response"],
+        "session_id": chat_request.session_id,
+        "session_state": agent_result.get("session_state", {}),
+        "raw_llm_response": agent_result.get("raw_llm_response"),
+        "entities": agent_result.get("entities")
+    }
 
-@app.get("/chat")
-async def chat_get():
-    return {"message": "Use POST with a JSON body to interact with this endpoint."}
