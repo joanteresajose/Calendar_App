@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, Optional, Any
-from backend.agent import agent_respond
+from agent import agent_respond
 
 app = FastAPI()
 
